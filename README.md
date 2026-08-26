@@ -1,6 +1,6 @@
 # Perfiles de riesgo nutricional y de anemia en niños menores de 5 años (ENDES 2025)
 
-Proyecto del curso **Data Mining** — Universidad del Pacífico
+Proyecto del curso **Data Mining** - Universidad del Pacífico
 Docente: Soledad Espezúa (s.espezual@up.edu.pe)
 Autor: Mateo
 
@@ -30,8 +30,8 @@ La anemia infantil es uno de los problemas de salud pública más persistentes e
 | | RECH5 — Mujeres de 12 a 49 años | RECH6 — Niños menores de 5 años |
 |---|---|---|
 | **Dataset** | Cuestionario del Hogar, módulo de mujeres (RECH5) | Cuestionario del Hogar, módulo de niños (RECH6) |
-| **Institución responsable** | Instituto Nacional de Estadística e Informática (INEI) — Encuesta Demográfica y de Salud Familiar (ENDES) 2025 | INEI — ENDES 2025 |
-| **Enlace de acceso** | https://proyectos.inei.gob.pe/microdatos/ | https://proyectos.inei.gob.pe/microdatos/ |
+| **Institución responsable** | Instituto Nacional de Estadística e Informática (INEI) - Encuesta Demográfica y de Salud Familiar (ENDES) 2025 | INEI - ENDES 2025 |
+| **Enlace de acceso** | [https://proyectos.inei.gob.pe/microdatos](https://proyectos.inei.gob.pe/microdatos/consulta.asp?cmbencuesta=Encuesta+Demogr%E1fica+y+de+Salud+Familiar+-+ENDES&cmbanno=2025&cmbTrimestre=5	)/ |[ https://proyectos.inei.gob.pe/microdatos/](https://proyectos.inei.gob.pe/microdatos/consulta.asp?cmbencuesta=Encuesta+Demogr%E1fica+y+de+Salud+Familiar+-+ENDES&cmbanno=2025&cmbTrimestre=5	) |
 | **Ruta de navegación** | El portal no permite un enlace directo de descarga: *Microdatos* → *Consulta por encuestas* → seleccionar la encuesta "Encuesta Demográfica y de Salud Familiar - ENDES", año 2025 → ubicar el módulo de mujeres (RECH5) en la lista de módulos disponibles → descargar en formato CSV. | Misma ruta que RECH5, seleccionando el módulo de niños (RECH6) en vez de mujeres. |
 | **Variables principales usadas** | Edad, peso, talla, nivel de hemoglobina, nivel de anemia, nivel educativo | Edad en meses, peso, talla, sexo, nivel de hemoglobina, nivel de anemia |
 | **Forma de acceso** | Descarga directa en CSV, de libre acceso, sin registro previo | Descarga directa en CSV, de libre acceso, sin registro previo |

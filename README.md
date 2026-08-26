@@ -9,7 +9,7 @@ La anemia infantil es uno de los problemas de salud pública más persistentes e
 
 **A quién beneficia:** entidades de salud pública (MINSA, gobiernos regionales de salud) y programas sociales de primera infancia, que necesitan priorizar recursos limitados hacia los grupos de mayor riesgo en lugar de aplicar intervenciones genéricas a toda la población infantil.
 
-**Objetivo de análisis:** segmentación (clustering) — agrupar niños según la combinación de sus indicadores antropométricos y de hemoglobina, para descubrir perfiles de riesgo no evidentes al mirar cada variable por separado.
+**Objetivo de análisis:** segmentación (clustering) - agrupar niños según la combinación de sus indicadores antropométricos y de hemoglobina, para descubrir perfiles de riesgo no evidentes al mirar cada variable por separado.
 
 **Unidad de análisis:** cada fila de la base final representa un niño menor de 5 años, vinculado a los datos de su madre (par madre-hijo).
 

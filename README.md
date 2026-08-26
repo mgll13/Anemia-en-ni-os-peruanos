@@ -2,7 +2,6 @@
 
 Proyecto del curso **Data Mining** - Universidad del Pacífico
 Docente: Soledad Espezúa (s.espezual@up.edu.pe)
-Autor: Mateo
 
 ## Descripción del proyecto
 

@@ -23,7 +23,6 @@ La anemia infantil es uno de los problemas de salud pública más persistentes e
 ├── DATABASE/                                   # Carpeta para los CSV originales (no incluidos, ver más abajo)
 └── outputs/
     ├── base_integrada_hito1.csv                # Base integrada del Hito 1, insumo del Hito 2
-    └── matriz_analitica_hito2.csv              # Matriz analítica (sin escalar y escalada), lista para PCA/K-means
 ```
 
 ## Fuentes de datos

@@ -107,8 +107,8 @@ scikit-learn
 
 ## Próximos pasos
 
-- ~~Estandarizar (media 0, desviación 1) las variables numéricas antes de aplicar K-means o PCA.~~ ✅ Completado en el Hito 2.
-- ~~Incorporar la ubicación geográfica del hogar (módulo RECH0) para explorar patrones territoriales de anemia.~~ ✅ Completado en el Hito 2.
+- ~~Estandarizar (media 0, desviación 1) las variables numéricas antes de aplicar K-means o PCA.~~  Completado en el Hito 2.
+- ~~Incorporar la ubicación geográfica del hogar (módulo RECH0) para explorar patrones territoriales de anemia.~~  Completado en el Hito 2.
 - Ejecutar PCA sobre la matriz analítica escalada para reducir dimensionalidad y explorar la varianza explicada por componente.
 - Ejecutar K-means con distintos valores de *k*, evaluando con el método del codo o *silhouette score*.
 - Interpretar los clusters resultantes cruzándolos con variables de contexto (educación de la madre, grupo de edad del niño, región y área de residencia).

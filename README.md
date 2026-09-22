@@ -22,7 +22,7 @@ La anemia infantil es uno de los problemas de salud pública más persistentes e
 │   └── Hito2_DM_Integrada_RECH0_2025.ipynb     # Hito 2: outliers, variables derivadas, discretización, escalamiento e integración de RECH0
 ├── DATABASE/                                   # Carpeta para los CSV originales (no incluidos, ver más abajo)
 └── outputs/
-    ├── base_integrada_hito1.csv                # Base integrada del Hito 1, insumo del Hito 2
+    └── base_integrada_hito1.csv                # Base integrada del Hito 1, insumo del Hito 2
 ```
 
 ## Fuentes de datos

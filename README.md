@@ -19,6 +19,7 @@ La anemia infantil es uno de los problemas de salud pública más persistentes e
 ├── README.md                          # Este archivo
 ├── notebooks/
 │   └── Hito1_DM_RECH5_RECH6.ipynb     # Notebook principal: carga, limpieza, integración y visualizaciones
+|   └── Hito2_DM_Integrada_RECH0_2025.ipynb 
 ├── DATABASE/                              # Carpeta para los CSV originales (no incluidos, ver más abajo)
 └── outputs/
     └── base_integrada_hito1.csv       # Base integrada resultante, lista para el siguiente hito

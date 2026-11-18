@@ -1,115 +1,137 @@
-# Perfiles de riesgo nutricional y de anemia en niños menores de 5 años (ENDES 2025)
+# Perfiles de riesgo de anemia infantil en el Perú (ENDES 2025)
 
-Proyecto del curso **Data Mining** - Universidad del Pacífico
-Docente: Soledad Espezúa (s.espezual@up.edu.pe)
+Proyecto de **Data Mining** que identifica perfiles de riesgo de anemia en niños de 6 a 59 meses combinando sus medidas (edad, peso, talla, hemoglobina) con las de su madre, y ubica esos perfiles en el territorio peruano.
 
-## Descripción del proyecto
+> **Hito 4 – Resultados finales, discusión y repositorio reproducible**
 
-La anemia infantil es uno de los problemas de salud pública más persistentes en el Perú, con brechas importantes entre regiones y entre zonas urbanas y rurales. Este proyecto busca caracterizar el estado nutricional y de anemia de niños menores de 5 años a partir de la Encuesta Demográfica y de Salud Familiar (ENDES) 2025, incorporando además el contexto de sus madres (edad, hemoglobina, nivel educativo) y del hogar (región, área urbana/rural), para identificar perfiles de riesgo que puedan orientar la priorización de intervenciones de salud (suplementación de hierro, seguimiento nutricional, programas alimentarios).
+**Autores:** Gadea · Uchuypoma · Zevallos
+<!-- Agrega aquí: curso, universidad, docente y semestre -->
 
-**A quién beneficia:** entidades de salud pública (MINSA, gobiernos regionales de salud) y programas sociales de primera infancia, que necesitan priorizar recursos limitados hacia los grupos y territorios de mayor riesgo en lugar de aplicar intervenciones genéricas a toda la población infantil.
+---
 
-**Objetivo de análisis:** segmentación (clustering) - agrupar niños según la combinación de sus indicadores antropométricos y de hemoglobina, para descubrir perfiles de riesgo no evidentes al mirar cada variable por separado.
+## Pregunta de análisis
 
-**Unidad de análisis:** cada fila de la base final representa un niño menor de 5 años, vinculado a los datos de su madre (par madre-hijo) y al contexto de su hogar (región, área).
+> ¿Qué perfiles de riesgo de anemia se pueden identificar en niños de 6 a 59 meses combinando sus medidas (edad, peso, talla, hemoglobina) con las de su madre, y dónde se ubican en el territorio?
+
+## Resultados principales
+
+- **La anemia varía mucho entre regiones:** desde ~18 % en Tacna hasta ~39 % en Puno. Es más alta en Puno, Loreto, Huánuco, Cusco y Madre de Dios, y más baja en la costa (Tacna, Callao, Lima, La Libertad).
+- **Tres perfiles de riesgo (K-means, k = 3):**
+
+  | Cluster | Perfil | Rasgos principales |
+  |---|---|---|
+  | 0 | Mayores, madre con más recursos | ~44 meses; madre de mayor talla, peso y educación; mayormente urbano |
+  | 1 | Mayores, madre en contexto vulnerable | ~41 meses; madre de menor talla, peso y educación; más rural y a mayor altitud |
+  | 2 | **Pequeños (6 a 24 meses)** | ~16 meses; **grupo con mayor anemia** |
+
+- **El contexto materno es un gradiente.** Dentro del grupo de pequeños, la anemia es mayor en zona rural (50 % vs 40 %), con madres de menor educación (51 % vs 33 % con educación superior) y de menor talla (46 % vs 39 %).
+- **El promedio regional esconde focos locales.** Hay centros poblados con anemia alta incluso en regiones de tasa baja o media. DBSCAN identificó **18 zonas** de concentración; las mayores están en Ayacucho, San Martín y Huánuco, con más de 50 % de anemia.
+- **K-means dice *a quién* afecta; DBSCAN dice *dónde* se concentra.** Ambas miradas se complementan.
+- **Limitación:** la silueta es baja y el PCA muestra que los grupos son franjas de una misma nube, no islas separadas. Los perfiles sirven para describir y priorizar, pero la frontera entre ellos es gradual.
+
+## Metodología
+
+| Parte | Contenido |
+|---|---|
+| **I. Datos** | Carga, limpieza de códigos sentinela, decimal implícito, integración madre–niño y hogar, y corrección/verificación de coordenadas con shapefile |
+| **II. Variable anemia** | Tres categorías (*Con anemia*, *Sin anemia*, *Sin clasificación*) y dos mejoras metodológicas |
+| **III. K-means** | Comparación de configuraciones con inercia, silueta, Davies-Bouldin, tamaño mínimo de grupo y estabilidad (ARI) |
+| **IV. Clustering jerárquico** | Método Ward, dendrograma y corte por salto de distancia de fusión |
+| **V. Decisión final** | Elección de k = 3 y perfilado de los grupos |
+| **VI. Mapas** | Mapas HTML interactivos con Folium y DBSCAN espacial |
+| **VII. Salidas** | Matriz final con clusters, figuras, tablas y mapas |
+
+### Mejoras respecto al Hito 3
+
+1. **No se imputa la hemoglobina.** Los niños sin medición (casi todos menores de 6 meses) ya no entran al modelo con una hemoglobina inventada: la población del clustering son los **niños de 6 a 59 meses con hemoglobina medida**.
+2. **Hemoglobina ajustada por altitud** (`HC56A` / `HA56A`; directriz OMS 2024 y RM 251-2024-MINSA). Sin el ajuste, K-means agrupaba en parte por geografía y no por riesgo.
+
+### Variables del clustering (matriz B)
+
+`edad_madre`, `peso_madre`, `talla_madre`, `hb_madre`, `educacion_madre`, `peso_nino`, `talla_nino`, `hb_nino`, `edad_meses` (escaladas con z-score).
+
+La anemia, el sexo y las variables territoriales **no** forman los grupos: solo se usan para describirlos e interpretarlos.
+
+### ¿Por qué k = 3 y no k = 2?
+
+Las métricas internas favorecían k = 2, pero esa solución solo separaba niños pequeños de mayores. Se eligió k = 3 porque:
+
+- el dendrograma Ward muestra un segundo salto claro al pasar de 3 a 2 grupos;
+- la estabilidad es alta (ARI ≈ 0,98);
+- aporta información adicional a la edad (el contexto materno).
 
 ## Estructura del repositorio
 
 ```
-├── README.md                                  # Este archivo
-├── notebooks/
-│   ├── Hito1_DM_RECH5_RECH6.ipynb              # Hito 1: carga, limpieza, integración y visualizaciones
-│   └── Hito2_DM_Integrada_RECH0_2025.ipynb     # Hito 2: outliers, variables derivadas, discretización, escalamiento e integración de RECH0
-├── DATABASE/                                   # Carpeta para los CSV originales (no incluidos, ver más abajo)
-└── outputs/
-    └── base_integrada_hito1.csv                # Base integrada del Hito 1, insumo del Hito 2
+.
+├── Hito4_Final_Gadea_Uchuypoma_Zevallos.ipynb   # Notebook principal
+├── README.md
+├── requirements.txt
+├── RECH0_2025.csv                # Hogares (INEI)     – no incluido, ver "Datos"
+├── RECH5_2025.csv                # Mujeres (INEI)     – no incluido, ver "Datos"
+├── RECH6_2025.csv                # Niños (INEI)       – no incluido, ver "Datos"
+├── peru_shapes/                  # Shapefiles adm0 y adm1 del Perú
+├── figuras/                      # Figuras PNG (se generan al ejecutar)
+├── tablas/                       # Tablas .csv y .tex (se generan al ejecutar)
+├── mapas/                        # Mapas HTML interactivos (se generan al ejecutar)
+└── resultados/
+    └── matriz_final_clusters.csv # Matriz B sin escalar + cluster y perfil por niño
 ```
 
-## Fuentes de datos
+## Datos
 
-| | RECH5 — Mujeres de 12 a 49 años | RECH6 — Niños menores de 5 años | RECH0 — Cuestionario del Hogar |
-|---|---|---|---|
-| **Dataset** | Cuestionario del Hogar, módulo de mujeres (RECH5) | Cuestionario del Hogar, módulo de niños (RECH6) | Cuestionario del Hogar, módulo de vivienda/hogar (RECH0) |
-| **Institución responsable** | INEI - Encuesta Demográfica y de Salud Familiar (ENDES) 2025 | INEI - ENDES 2025 | INEI - ENDES 2025 |
-| **Enlace de acceso** | [https://proyectos.inei.gob.pe/microdatos](https://proyectos.inei.gob.pe/microdatos/consulta.asp?cmbencuesta=Encuesta+Demogr%E1fica+y+de+Salud+Familiar+-+ENDES&cmbanno=2025&cmbTrimestre=5) | [https://proyectos.inei.gob.pe/microdatos](https://proyectos.inei.gob.pe/microdatos/consulta.asp?cmbencuesta=Encuesta+Demogr%E1fica+y+de+Salud+Familiar+-+ENDES&cmbanno=2025&cmbTrimestre=5) | [https://proyectos.inei.gob.pe/microdatos](https://proyectos.inei.gob.pe/microdatos/consulta.asp?cmbencuesta=Encuesta+Demogr%E1fica+y+de+Salud+Familiar+-+ENDES&cmbanno=2025&cmbTrimestre=5) |
-| **Ruta de navegación** | *Microdatos* → *Consulta por encuestas* → ENDES 2025 → módulo de mujeres (RECH5) → descargar en CSV | Misma ruta, seleccionando el módulo de niños (RECH6) | Misma ruta, seleccionando el módulo del hogar (RECH0) |
-| **Variables principales usadas** | Edad, peso, talla, nivel de hemoglobina, nivel de anemia, nivel educativo | Edad en meses, peso, talla, sexo, nivel de hemoglobina, nivel de anemia | Región (`HV024`), área urbano/rural (`HV025`), identificador de hogar (`HHID`) |
-| **Forma de acceso** | Descarga directa en CSV, libre acceso, sin registro previo | Descarga directa en CSV, libre acceso, sin registro previo | Descarga directa en CSV, libre acceso, sin registro previo |
+Los microdatos provienen de la **Encuesta Demográfica y de Salud Familiar (ENDES) 2025** del INEI, disponibles en el portal de microdatos: <https://proyectos.inei.gob.pe/microdatos/>
 
-Las tres fuentes se documentan con el diccionario oficial de variables publicado por el INEI junto con cada módulo (`Diccionario_-_RECH5.pdf`, `Diccionario_-_RECH6.pdf`, `Diccionario_-_RECH0.pdf`), que define los códigos de captura, categorías y los valores sentinela usados para "no medido".
+| Archivo | Contenido |
+|---|---|
+| `RECH0_2025.csv` | Datos del hogar (región, área, altitud, UBIGEO, coordenadas) |
+| `RECH5_2025.csv` | Mujeres (madres) |
+| `RECH6_2025.csv` | Niños |
+| `peru_shapes/per_admbnda_adm0_ign_20200714.shp` | Contorno del país |
+| `peru_shapes/per_admbnda_adm1_ign_20200714.shp` | Contornos de regiones |
 
-> **Nota:** los archivos CSV originales no se incluyen en este repositorio por su tamaño y por buenas prácticas de control de versiones. Deben descargarse siguiendo la ruta indicada arriba y colocarse en la carpeta `DATABASE/` antes de ejecutar los notebooks.
+Coloca estos archivos en la raíz del proyecto antes de ejecutar el notebook.
 
-## Cómo ejecutar el proyecto
+## Cómo reproducirlo
 
-### Opción A — Google Colab (recomendado)
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/<tu-usuario>/<tu-repositorio>.git
+   cd <tu-repositorio>
+   ```
+2. Crea un entorno e instala las dependencias:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate        # En Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+3. Agrega los archivos de datos (ver sección anterior).
+4. Abre y ejecuta el notebook completo:
+   ```bash
+   jupyter notebook Hito4_Final_Gadea_Uchuypoma_Zevallos.ipynb
+   ```
 
-**Hito 1:**
-1. Abrir [Google Colab](https://colab.research.google.com/) y cargar `notebooks/Hito1_DM_RECH5_RECH6.ipynb`.
-2. Descargar `RECH5_2025.csv` y `RECH6_2025.csv` siguiendo la ruta de navegación descrita en **Fuentes de datos**.
-3. Subir ambos archivos al entorno de Colab, en el mismo directorio raíz donde corre el notebook.
-4. Ejecutar todas las celdas en orden: `Entorno de ejecución → Ejecutar todas`.
-5. El notebook exporta `base_integrada_hito1.csv`, insumo del Hito 2.
+La semilla es fija (`SEMILLA = 42`), por lo que K-means y las muestras dan siempre el mismo resultado.
 
-**Hito 2:**
-1. Cargar `notebooks/Hito2_DM_Integrada_RECH0_2025.ipynb`.
-2. Descargar `RECH0_2025.csv` siguiendo la misma ruta de navegación (módulo del hogar).
-3. Subir `RECH0_2025.csv` y `base_integrada_hito1.csv` (resultado del Hito 1) al entorno de Colab.
-4. Ejecutar todas las celdas en orden.
+## Mapas interactivos
 
-### Opción B — Entorno local
+Se generan en la carpeta `mapas/`. Ábrelos en el navegador:
 
-```bash
-git clone <URL-de-este-repositorio>
-cd <nombre-del-repositorio>
-pip install -r requirements.txt
-jupyter notebook notebooks/Hito1_DM_RECH5_RECH6.ipynb
-```
+| Archivo | Contenido |
+|---|---|
+| `m01_centros_anemia_alta.html` | Centros poblados con ≥ 40 % de anemia (mín. 5 niños) |
+| `m02_calor_ninos_con_anemia.html` | Mapa de calor de niños con anemia |
+| `m04_coropletico_anemia_region.html` | Coroplético: % de anemia por región |
+| `m06_dbscan_zonas_anemia_alta.html` | Zonas de concentración detectadas con DBSCAN |
+| `m07_mapa_final_capas.html` | Mapa final con todas las capas y selector |
 
-Colocar `RECH5_2025.csv`, `RECH6_2025.csv` y `RECH0_2025.csv` (descargados según **Fuentes de datos**) en la carpeta `DATABASE/`, y ajustar las rutas de lectura al inicio de cada notebook si es necesario. El Hito 2 requiere además `base_integrada_hito1.csv`, generado al ejecutar el Hito 1.
+> Las conclusiones territoriales se basan en **porcentajes** y no en densidad, porque los mapas de calor siguen el diseño muestral de la encuesta.
 
-### Dependencias
+## Tecnologías
 
-```
-pandas
-numpy
-plotly
-seaborn
-matplotlib
-scikit-learn
-```
+Python · pandas · NumPy · GeoPandas · scikit-learn · SciPy · Matplotlib · Seaborn · Folium
 
-## Contenido del notebook — Hito 1
+## Licencia y uso de datos
 
-1. Carga de datos y selección de variables relevantes.
-2. Inspección inicial (tamaño, tipos, resumen estadístico).
-3. Diagnóstico preliminar de calidad (valores faltantes ocultos tras códigos sentinela, categorías con errores de registro).
-4. Definición de la clave de integración y validación de duplicados.
-5. Tratamiento de valores inválidos y estandarización de categorías.
-6. Plan e integración de fuentes (`merge` auditado con `indicator=True`).
-7. Registro de decisiones de limpieza e integración, con su justificación.
-8. Visualizaciones iniciales, seleccionadas según el tipo de cada variable.
-9. Hallazgos y conclusiones preliminares.
-10. Próximos pasos.
-
-## Contenido del notebook — Hito 2
-
-1. Incorporación de `RECH0` (región y área del hogar) a la base integrada, mediante una relación hogar (1) → pares madre-niño (N).
-2. Detección de valores atípicos en el nivel de hemoglobina del niño (regla IQR y z-score), con decisión justificada de **no** tratarlos como error, por representar la población de interés del proyecto.
-3. Construcción de variables derivadas: `diferencia_hemoglobina` (madre-niño) y `tiene_anemia_bin` (indicador binario de riesgo, para validar clusters posteriormente).
-4. Discretización de `Edad en meses del niño` en tres grupos (0-6 / 6-24 / 24-60 meses), con puntos de corte basados en el hallazgo del Hito 1 sobre la ventana etaria de mayor riesgo de anemia.
-5. Codificación de variables categóricas: binaria (sexo), ordinal (nivel educativo de la madre, grupo de edad), y decisión justificada de **no** aplicar one-hot encoding a región (25 categorías) dentro de la matriz de clustering.
-6. Escalamiento de variables numéricas continuas mediante estandarización z-score (`StandardScaler`), como preparación para PCA y K-means.
-7. Construcción de la matriz analítica actualizada (versión sin escalar y versión escalada).
-8. Tabla resumen a nivel región (`groupby` por región y área), con tasa de anemia y hemoglobina promedio, para reportar hallazgos geográficos accionables.
-9. Verificación final de la matriz (dimensiones, faltantes, tipos de datos).
-10. Registro de decisiones de transformación, con su justificación.
-
-## Próximos pasos
-
-- ~~Estandarizar (media 0, desviación 1) las variables numéricas antes de aplicar K-means o PCA.~~  Completado en el Hito 2.
-- ~~Incorporar la ubicación geográfica del hogar (módulo RECH0) para explorar patrones territoriales de anemia.~~  Completado en el Hito 2.
-- Ejecutar PCA sobre la matriz analítica escalada para reducir dimensionalidad y explorar la varianza explicada por componente.
-- Ejecutar K-means con distintos valores de *k*, evaluando con el método del codo o *silhouette score*.
-- Interpretar los clusters resultantes cruzándolos con variables de contexto (educación de la madre, grupo de edad del niño, región y área de residencia).
-- Evaluar si la tabla resumen por región (Hito 2) debe incorporarse como capa adicional de interpretación de los clusters (ej. ¿los clusters de mayor riesgo se concentran en regiones específicas?).
+<!-- Elige una licencia para el código (por ejemplo MIT) y agrégala como LICENSE. -->
+Los datos pertenecen al INEI y se rigen por sus términos de uso.

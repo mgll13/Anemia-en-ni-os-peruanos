@@ -70,11 +70,8 @@ Las métricas internas favorecían k = 2, pero esa solución solo separaba niño
 ├── RECH0_2025.csv                # Hogares (INEI)     – no incluido, ver "Datos"
 ├── RECH5_2025.csv                # Mujeres (INEI)     – no incluido, ver "Datos"
 ├── RECH6_2025.csv                # Niños (INEI)       – no incluido, ver "Datos"
-├── peru_shapes/                  # Shapefiles adm0 y adm1 del Perú
-├── figuras/                      # Figuras PNG (se generan al ejecutar)
-├── tablas/                       # Tablas .csv y .tex (se generan al ejecutar)
-├── mapas/                        # Mapas HTML interactivos (se generan al ejecutar)
-└── resultados/
+├── peru_shapes                  # Shapefiles adm0 y adm1 del Perú
+└── resultados
     └── matriz_final_clusters.csv # Matriz B sin escalar + cluster y perfil por niño
 ```
 
